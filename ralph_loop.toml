@@ -1,0 +1,23 @@
+[loop]
+max_iterations = 5
+score_threshold = 70
+
+[claude]
+model = "sonnet"
+extra_args = ["--dangerously-skip-permissions"]
+
+[prompt]
+file = "prompt.md"
+
+[[checks.items]]
+name = "build"
+command = "cargo build 2>&1"
+score = 30
+
+[[checks.items]]
+name = "test"
+command = "cargo test 2>&1"
+score = 50
+
+[git]
+auto_commit = true

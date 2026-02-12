@@ -1,0 +1,8 @@
+/target/
+Cargo.lock
+TODO.md
+done_list.md
+*.swp
+*.swo
+*~
+.DS_Store
