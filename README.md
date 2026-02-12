@@ -2,6 +2,8 @@
 
 Obsidian / Obsidian Tasks 互換の Markdown TODO ファイルを壊さずに編集する Rust CLI。
 
+**AI エージェントとの相性抜群** — プレーンテキスト (Markdown) ベースなので、Claude Code や GPT などの AI に TODO の整理・優先度変更・タスク移動を任せるのに最適です。JSON や DB ではなく人間が読める Markdown をそのまま操作するため、AI が文脈を理解しやすく、Obsidian で手動編集もできます。
+
 ## 特徴
 
 - ✅ セクション方式のタスク管理
@@ -10,12 +12,30 @@ Obsidian / Obsidian Tasks 互換の Markdown TODO ファイルを壊さずに編
 - ✅ 動的な番号付け（実行時生成）
 - ✅ 完了タスクのアーカイブ機能
 - ✅ ゼロ設定で動作
+- ✅ AI エージェントによるタスク管理に最適
 
 ## インストール
 
 ```bash
-cargo install --path .
+cargo build --release
+cp target/release/mdtodo ~/.local/bin/
 ```
+
+## クイックスタート
+
+```bash
+# 1. TODO.md を作成
+mdtodo init
+
+# 2. タスクを追加
+mdtodo add Today "最初のタスク"
+
+# 3. 一覧表示
+mdtodo list
+```
+
+> **注意**: 設定ファイルがない場合、`mdtodo` は**カレントディレクトリ**の `./TODO.md` と `./done_list.md` を操作します。
+> 常に同じファイルを操作したい場合は、[設定ファイル](#設定)で `todo_path` / `done_path` を絶対パスで指定してください。
 
 ## 使い方
 
@@ -26,6 +46,7 @@ mdtodo init
 ```
 
 デフォルトのセクション（Today, Next, Backlogs, Someday, Waiting, Inbox）を含む TODO.md を作成します。
+既にファイルが存在する場合は上書きしません。
 
 ### タスク一覧表示
 
