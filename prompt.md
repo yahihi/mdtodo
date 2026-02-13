@@ -49,6 +49,19 @@ Obsidian / Obsidian Tasks 互換の Markdown TODO ファイルを壊さずに編
 - 一括: `mdtodo archive Today:all`（完了済みのみ）
 - 未完了は許可しない（事故防止）
 
+### `mdtodo delete <Section>:<numbers>`
+タスクを削除する。
+- 例: `mdtodo delete Today:3`（Today の 3番を削除）
+- 例: `mdtodo delete Backlog:1,4`（複数指定可）
+- 削除前に対象タスクのテキストを表示する
+- 完了・未完了を問わず削除可能
+
+### `mdtodo edit <Section>:<number> <new_text>`
+タスクのテキストを編集する。
+- 例: `mdtodo edit Today:1 "新しいタスクテキスト"`
+- 完了状態・完了日はそのまま保持する
+- 編集前と編集後のテキストを表示する
+
 ### `mdtodo init`
 TODO.md を初期テンプレートで作成（設定ファイルの todo_path の場所に作成）。
 

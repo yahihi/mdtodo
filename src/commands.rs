@@ -231,6 +231,71 @@ pub fn archive(task_ref: String) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+pub fn delete(task_ref: String) -> Result<(), Box<dyn std::error::Error>> {
+    let config = Config::load()?;
+    let todo_path = config.todo_path()?;
+    let mut todo = TodoFile::load(&todo_path)?;
+
+    let (section_name, task_nums) = parse_task_ref_multi(&task_ref)?;
+    let section_idx = todo
+        .find_section(&section_name)
+        .ok_or(format!("Section '{}' not found", section_name))?;
+
+    let mut tasks_to_delete = Vec::new();
+    for task_num in task_nums.iter().rev() {
+        let task_idx = task_num - 1;
+        if task_idx >= todo.sections[section_idx].tasks.len() {
+            return Err(
+                format!("Task {} not found in section '{}'", task_num, section_name).into(),
+            );
+        }
+        let task = todo.sections[section_idx].tasks.remove(task_idx);
+        tasks_to_delete.push((task_num, task));
+    }
+
+    tasks_to_delete.reverse();
+
+    for (task_num, task) in &tasks_to_delete {
+        println!(
+            "Deleted: {} ({}:{})",
+            task.text, section_name, task_num
+        );
+    }
+
+    todo.save(&todo_path)?;
+
+    Ok(())
+}
+
+pub fn edit(task_ref: String, new_text: String) -> Result<(), Box<dyn std::error::Error>> {
+    let config = Config::load()?;
+    let todo_path = config.todo_path()?;
+    let mut todo = TodoFile::load(&todo_path)?;
+
+    let (section_name, task_num) = parse_task_ref(&task_ref)?;
+    let section_idx = todo
+        .find_section(&section_name)
+        .ok_or(format!("Section '{}' not found", section_name))?;
+
+    let task_idx = task_num - 1;
+    if task_idx >= todo.sections[section_idx].tasks.len() {
+        return Err(format!("Task {} not found in section '{}'", task_num, section_name).into());
+    }
+
+    let task = &mut todo.sections[section_idx].tasks[task_idx];
+    let old_text = task.text.clone();
+    task.text = new_text.clone();
+
+    todo.save(&todo_path)?;
+
+    println!(
+        "Edited ({}:{}):\n  Before: {}\n  After:  {}",
+        section_name, task_num, old_text, new_text
+    );
+
+    Ok(())
+}
+
 pub fn init() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::load()?;
     let todo_path = config.todo_path()?;

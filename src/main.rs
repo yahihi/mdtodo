@@ -49,6 +49,18 @@ enum Commands {
         /// Task reference (Section:number,number,... or Section:all)
         task: String,
     },
+    /// Delete tasks
+    Delete {
+        /// Task reference (Section:number or Section:number,number,...)
+        task: String,
+    },
+    /// Edit a task's text
+    Edit {
+        /// Task reference (Section:number)
+        task: String,
+        /// New text
+        text: String,
+    },
     /// Initialize TODO.md with default template
     Init,
 }
@@ -63,6 +75,8 @@ fn main() {
         Commands::Undo { task } => commands::undo(task),
         Commands::Move { task, dest } => commands::move_task(task, dest),
         Commands::Archive { task } => commands::archive(task),
+        Commands::Delete { task } => commands::delete(task),
+        Commands::Edit { task, text } => commands::edit(task, text),
         Commands::Init => commands::init(),
     };
 
