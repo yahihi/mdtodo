@@ -2,21 +2,24 @@
 
 ## v0.1.0 (2026-02-13)
 
-初回リリース。
+初回リリース — Obsidian 互換のセクション付き Markdown TODO CLI。
 
-### 機能
+### ✨ New Features
 
-- `mdtodo init` — デフォルトセクション付き TODO.md の初期化
-- `mdtodo list [Section]` — セクション別タスク一覧（動的番号付き）
-- `mdtodo add <Section> <text>` — タスク追加（セクション自動作成）
-- `mdtodo done <Section:number>` — タスク完了（`✅ YYYY-MM-DD` 自動付与）
-- `mdtodo undo <Section:number>` — 完了取り消し
-- `mdtodo move <Section:number[,...]> <Dest>` — セクション間移動（複数指定可）
-- `mdtodo archive <Section:number[,...]|all>` — 完了タスクを done_list.md にアーカイブ
+- **セクション付きタスク管理** — `## Today` / `## Next` / `## PROJECT1` など任意セクションでタスクを整理
+- **タスクの追加・完了・取り消し** — `add` / `done` / `undo` コマンドで基本操作が完結
+- **セクション間タスク移動** — `move` コマンドで複数タスクを一度に別セクションへ移動（核心機能）
+- **完了タスクのアーカイブ** — `archive` コマンドで done_list.md に日付・セクション別で整理保管
+- **TODO.md の初期化** — `init` コマンドでデフォルトセクション付きテンプレートを生成
 
-### 設計
+### 🔧 Improvements
 
-- Obsidian / Obsidian Tasks 互換の Markdown フォーマット
-- セクションごとの動的番号付け（ファイルには書かない）
-- `~/.config/mdtodo/config.toml` によるゼロ設定動作
-- 未完了タスクのアーカイブ防止（安全機構）
+- **AI エージェント対応** — プレーンテキスト Markdown ベースなので Claude Code 等の AI にタスク管理を任せやすい設計
+- **動的番号付け** — タスク番号はファイルに書かず実行時に生成、Markdown を汚さない
+- **ゼロ設定動作** — `~/.config/mdtodo/config.toml` がなくてもカレントディレクトリで即動作
+- **セクション自動作成** — `move` / `add` で存在しないセクションを指定すると自動的に新規作成
+
+### 🛡️ Safety
+
+- 未完了タスクのアーカイブを防止（事故防止機構）
+- 操作結果は対象タスクのテキストとセクション名を必ず明示出力
