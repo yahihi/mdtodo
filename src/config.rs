@@ -1,3 +1,5 @@
+use chrono::{Local, Utc};
+use chrono_tz::Tz;
 use serde::Deserialize;
 use std::fs;
 use std::path::PathBuf;
@@ -72,6 +74,16 @@ impl Config {
     pub fn done_path(&self) -> Result<PathBuf, Box<dyn std::error::Error>> {
         Self::expand_path(&self.done_path)
     }
+
+    pub fn today_str(&self) -> Result<String, Box<dyn std::error::Error>> {
+        if self.timezone == "Local" {
+            Ok(Local::now().format("%Y-%m-%d").to_string())
+        } else {
+            let tz: Tz = self.timezone.parse()
+                .map_err(|_| format!("Invalid timezone: '{}'", self.timezone))?;
+            Ok(Utc::now().with_timezone(&tz).format("%Y-%m-%d").to_string())
+        }
+    }
 }
 
 #[cfg(test)]
@@ -84,5 +96,38 @@ mod tests {
         assert_eq!(config.todo_path, "./TODO.md");
         assert_eq!(config.done_path, "./done_list.md");
         assert_eq!(config.timezone, "Local");
+    }
+
+    #[test]
+    fn test_today_str_local() {
+        let config = Config::default();
+        let today = config.today_str().unwrap();
+        let expected = Local::now().format("%Y-%m-%d").to_string();
+        assert_eq!(today, expected);
+    }
+
+    #[test]
+    fn test_today_str_named_timezone() {
+        let config = Config {
+            timezone: "Asia/Tokyo".to_string(),
+            ..Config::default()
+        };
+        let today = config.today_str().unwrap();
+        let expected = Utc::now()
+            .with_timezone(&"Asia/Tokyo".parse::<Tz>().unwrap())
+            .format("%Y-%m-%d")
+            .to_string();
+        assert_eq!(today, expected);
+    }
+
+    #[test]
+    fn test_today_str_invalid_timezone() {
+        let config = Config {
+            timezone: "Invalid/Zone".to_string(),
+            ..Config::default()
+        };
+        let result = config.today_str();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Invalid timezone"));
     }
 }

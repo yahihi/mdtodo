@@ -1,6 +1,5 @@
 use crate::config::Config;
 use crate::markdown::{Task, TodoFile};
-use chrono::Local;
 use std::collections::HashMap;
 use std::fs;
 
@@ -74,7 +73,7 @@ pub fn done(task_ref: String) -> Result<(), Box<dyn std::error::Error>> {
 
     let task = &mut todo.sections[section_idx].tasks[task_idx];
     task.done = true;
-    task.done_date = Some(Local::now().format("%Y-%m-%d").to_string());
+    task.done_date = Some(config.today_str()?);
 
     let task_text = task.text.clone();
     todo.save(&todo_path)?;
