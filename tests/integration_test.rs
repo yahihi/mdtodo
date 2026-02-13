@@ -130,3 +130,49 @@ fn test_done_list_structure() {
     assert!(read_content.contains("### PROJECT1"));
     assert!(read_content.contains("## 2026-02-12"));
 }
+
+#[test]
+fn test_delete_command() {
+    let (_temp_dir, todo_path, _) = setup_test_env();
+
+    let initial_content = r#"# TODO
+
+## Today
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Next
+- [ ] Task 4
+"#;
+
+    fs::write(&todo_path, initial_content).unwrap();
+
+    // Verify initial state
+    let content = fs::read_to_string(&todo_path).unwrap();
+    assert!(content.contains("- [ ] Task 1"));
+    assert!(content.contains("- [ ] Task 2"));
+    assert!(content.contains("- [ ] Task 3"));
+}
+
+#[test]
+fn test_edit_command() {
+    let (_temp_dir, todo_path, _) = setup_test_env();
+
+    let initial_content = r#"# TODO
+
+## Today
+- [ ] Old task text
+- [x] Completed task ✅ 2026-02-13
+
+## Next
+- [ ] Another task
+"#;
+
+    fs::write(&todo_path, initial_content).unwrap();
+
+    // Verify initial state
+    let content = fs::read_to_string(&todo_path).unwrap();
+    assert!(content.contains("- [ ] Old task text"));
+    assert!(content.contains("- [x] Completed task ✅ 2026-02-13"));
+}

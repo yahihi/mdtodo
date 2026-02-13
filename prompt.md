@@ -107,3 +107,8 @@ timezone = "Asia/Tokyo"
 - CLI パーサー: clap
 - テスト: `cargo test` で全テストパス
 - `cargo build` が成功すること
+
+## ドキュメント
+
+- `IMPLEMENTATION.md` を常に最新の実装状態に合わせて更新すること
+- コマンド一覧・テスト数・使用例などを実装と同期させる

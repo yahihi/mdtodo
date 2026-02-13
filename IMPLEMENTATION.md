@@ -68,6 +68,19 @@ All requirements have been successfully implemented and tested.
 - **Safety**: Rejects incomplete tasks
 - Organizes by completion date and section
 
+#### 8. `mdtodo delete <Section:number[,...]>`
+- Deletes tasks from TODO.md
+- Single: `mdtodo delete Today:3`
+- Multiple: `mdtodo delete Backlog:1,4`
+- Shows deleted task text before removal
+- Works on both completed and incomplete tasks
+
+#### 9. `mdtodo edit <Section:number> <new_text>`
+- Edits task text while preserving completion state
+- Example: `mdtodo edit Today:1 "New task text"`
+- Shows before/after text
+- Preserves completion date if task is done
+
 ### ✅ done_list.md Structure
 
 Organized hierarchically by date → section:
@@ -99,18 +112,20 @@ Organized hierarchically by date → section:
 - `commands::tests::test_parse_task_ref_multi`
 - `commands::tests::test_parse_numbers`
 
-### Integration Tests (5 tests) ✅
+### Integration Tests (7 tests) ✅
 - `test_init_creates_todo_file`
 - `test_task_lifecycle`
 - `test_markdown_parsing_with_done_dates`
 - `test_section_preservation`
 - `test_done_list_structure`
+- `test_delete_command`
+- `test_edit_command`
 
 ### Test Results
 ```
 cargo test
-running 11 tests
-test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured
+running 13 tests
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured
 ```
 
 ### Manual Testing ✅
@@ -125,6 +140,8 @@ All commands verified working:
 - ✅ `archive` moves to done_list.md
 - ✅ `archive` rejects incomplete tasks
 - ✅ `archive all` processes only completed tasks
+- ✅ `delete` removes single and multiple tasks
+- ✅ `edit` updates task text while preserving completion state
 
 ## Technical Stack
 
@@ -192,6 +209,14 @@ mdtodo undo Today:1
 # Archive completed tasks
 mdtodo archive Today:3,5      # Specific tasks
 mdtodo archive PROJECT1:all   # All completed in section
+
+# Delete tasks
+mdtodo delete Today:2         # Single task
+mdtodo delete Backlog:1,3,5   # Multiple tasks
+
+# Edit task text
+mdtodo edit Today:1 "Updated task description"
+mdtodo edit PROJECT1:2 "New API design approach"
 ```
 
 ## Safety Features
@@ -247,10 +272,10 @@ If not present, uses defaults:
 ✅ **All requirements implemented and tested**
 - Section-based Markdown TODO management
 - Dynamic per-section task numbering
-- 7 complete commands (init, list, add, done, undo, move, archive)
+- 9 complete commands (init, list, add, done, undo, move, archive, delete, edit)
 - Obsidian/Obsidian Tasks compatibility
 - Safe operations with clear feedback
 - Zero-config with sensible defaults
-- Comprehensive test coverage (11/11 passing)
+- Comprehensive test coverage (13/13 passing)
 
 ⭐ **Core Feature**: Multi-task `move` command enables efficient task workflow management across sections with automatic section creation.
