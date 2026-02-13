@@ -6,3 +6,4 @@ done_list.md
 *.swo
 *~
 .DS_Store
+.claude/
